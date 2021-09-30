@@ -101,8 +101,15 @@ OntoUMLModelQuery class >> getEntitiesFrom: aModel withStereotype: aStereotypeCl
 ]
 
 { #category : #generalizations }
+OntoUMLModelQuery class >> getGeneralizationSetsFrom: aModel [
+	^ aModel select: [ :object | object isKindOf: OPUMLGeneralizationSet. ].
+]
+
+{ #category : #generalizations }
 OntoUMLModelQuery class >> getGeneralizationsFrom: aModel [
-	^ aModel select: [ :object | object isKindOf: OPUMLGeneralization. ].
+	| generalizations |
+	generalizations := (self getEntitiesFrom: aModel) flatCollect: [ :object | object generalizations ].
+	^ (generalizations select: [ :generalization | generalization generalizationSets isEmpty. ]) asSet.
 ]
 
 { #category : #generalizations }

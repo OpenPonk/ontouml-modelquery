@@ -241,7 +241,7 @@ OntoUMLModelQueryTest >> testGetGeneralizationsFrom [
 	| model result  |
 	model := self getTestModelForGeneralizations.
 	result := model select: [ : object | object isKindOf: OPUMLGeneralization. ].
-	self assert: (OntoUMLModelQuery getGeneralizationsFrom: model) equals: result.
+	self assert: (OntoUMLModelQuery getGeneralizationsFrom: model) equals: result asSet.
 ]
 
 { #category : #tests }
@@ -251,7 +251,7 @@ OntoUMLModelQueryTest >> testGetGeneralizationsFromFilterBy [
 	result := (model select: [ : object | object isKindOf: OPUMLGeneralization. ])
 		select: [ :generalization | generalization specific = model first].
 	self assert: (OntoUMLModelQuery getGeneralizationsFrom: model filterBy:
-		[ :generalization | generalization specific = model first]) equals: result.
+		[ :generalization | generalization specific = model first]) equals: result asSet.
 ]
 
 { #category : #tests }
