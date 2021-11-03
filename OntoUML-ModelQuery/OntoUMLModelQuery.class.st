@@ -102,7 +102,7 @@ OntoUMLModelQuery class >> getEntitiesFrom: aModel withStereotype: aStereotypeCl
 
 { #category : #generalizations }
 OntoUMLModelQuery class >> getGeneralizationSetsFrom: aModel [
-	^ aModel select: [ :object | object isKindOf: OPUMLGeneralizationSet. ].
+	^ (aModel select: [ :object | object isKindOf: OPUMLGeneralizationSet. ]) asSet.
 ]
 
 { #category : #generalizations }
