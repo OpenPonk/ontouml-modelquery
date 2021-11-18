@@ -107,9 +107,7 @@ OntoUMLModelQuery class >> getGeneralizationSetsFrom: aModel [
 
 { #category : #generalizations }
 OntoUMLModelQuery class >> getGeneralizationsFrom: aModel [
-	| generalizations |
-	generalizations := (self getEntitiesFrom: aModel) flatCollect: [ :object | object generalizations ].
-	^ (generalizations select: [ :generalization | generalization generalizationSets isEmpty. ]) asSet.
+	^ ((self getEntitiesFrom: aModel) flatCollect: [ :object | object generalizations ]) asSet.
 ]
 
 { #category : #generalizations }
@@ -118,6 +116,13 @@ OntoUMLModelQuery class >> getGeneralizationsFrom: aModel filterBy: aBlockFilter
 			[ :generalization | aBlockFilter value: generalization ].
 	
 
+]
+
+{ #category : #generalizations }
+OntoUMLModelQuery class >> getGeneralizationsWithoutGenSetsFrom: aModel [
+	| generalizations |
+	generalizations := (self getEntitiesFrom: aModel) flatCollect: [ :object | object generalizations ].
+	^ (generalizations select: [ :generalization | generalization generalizationSets isEmpty. ]) asSet.
 ]
 
 { #category : #generalizations }
