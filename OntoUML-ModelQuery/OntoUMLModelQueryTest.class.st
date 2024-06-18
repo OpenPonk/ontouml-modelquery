@@ -1,10 +1,11 @@
 Class {
-	#name : #OntoUMLModelQueryTest,
-	#superclass : #TestCase,
-	#category : #'OntoUML-ModelQuery'
+	#name : 'OntoUMLModelQueryTest',
+	#superclass : 'TestCase',
+	#category : 'OntoUML-ModelQuery',
+	#package : 'OntoUML-ModelQuery'
 }
 
-{ #category : #'tests - utility' }
+{ #category : 'tests - utility' }
 OntoUMLModelQueryTest >> createAssociationFrom: aSource to: aEnd [
 	| association|
 	association := OPUMLAssociation new.
@@ -24,7 +25,7 @@ OntoUMLModelQueryTest >> createAssociationFrom: aSource to: aEnd [
 	^ association
 ]
 
-{ #category : #'tests - utility' }
+{ #category : 'tests - utility' }
 OntoUMLModelQueryTest >> createClass: aName withStereotype: aStereotype [
 	| result |
 	result := OPUMLClass new.
@@ -33,7 +34,7 @@ OntoUMLModelQueryTest >> createClass: aName withStereotype: aStereotype [
 	^ result.
 ]
 
-{ #category : #'tests - utility' }
+{ #category : 'tests - utility' }
 OntoUMLModelQueryTest >> createGeneralizationFor: aGeneral withSpecific: aSpecific [
 	| generalization |
 	generalization := OPUMLGeneralization new.
@@ -42,12 +43,12 @@ OntoUMLModelQueryTest >> createGeneralizationFor: aGeneral withSpecific: aSpecif
 	^ generalization.
 ]
 
-{ #category : #'tests - utility' }
+{ #category : 'tests - utility' }
 OntoUMLModelQueryTest >> getClassBlockSorter [
 	^ [ :a :b | a name <= b name].
 ]
 
-{ #category : #'tests - constants' }
+{ #category : 'tests - constants' }
 OntoUMLModelQueryTest >> getTestAssociation [
 	| kind quality association |
 	kind := self createClass: 'kind' withStereotype: OntoUMLKind.
@@ -59,7 +60,7 @@ OntoUMLModelQueryTest >> getTestAssociation [
 	^ association.
 ]
 
-{ #category : #'tests - constants' }
+{ #category : 'tests - constants' }
 OntoUMLModelQueryTest >> getTestModelForAssociations [
 	| kind subkind quality role mediationToKind mediationToSubKind characterization generalization |
 	kind := self createClass: 'kind' withStereotype: OntoUMLKind.
@@ -76,7 +77,7 @@ OntoUMLModelQueryTest >> getTestModelForAssociations [
 	^ { kind. subkind. quality. role. mediationToKind. mediationToSubKind. characterization. generalization. }.
 ]
 
-{ #category : #'tests - constants' }
+{ #category : 'tests - constants' }
 OntoUMLModelQueryTest >> getTestModelForEntities [
 	| elementKind elementSubKindA elementSubKindB elementQuality association generalizationA generalizationB |
 	elementKind := self createClass: 'elementKind' withStereotype: OntoUMLKind.
@@ -90,7 +91,7 @@ OntoUMLModelQueryTest >> getTestModelForEntities [
 	^ { elementKind. elementSubKindA. elementSubKindB. elementQuality. association. generalizationA. generalizationB }.
 ]
 
-{ #category : #'tests - constants' }
+{ #category : 'tests - constants' }
 OntoUMLModelQueryTest >> getTestModelForGeneralizations [
 	| testedChild parent1 parent2 parent3 testedParent sibling outsideElement |
 	testedChild := 	self createClass: 'testedChild' withStereotype: OntoUMLRole.
@@ -111,7 +112,7 @@ OntoUMLModelQueryTest >> getTestModelForGeneralizations [
 		}.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OntoUMLModelQueryTest >> testGetAncestorsFor [
 	| model result |
 	model := self getTestModelForGeneralizations.
@@ -121,7 +122,7 @@ OntoUMLModelQueryTest >> testGetAncestorsFor [
 	self assert: ((OntoUMLModelQuery getAncestorsFor: model first) sorted: self getClassBlockSorter) equals: result.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OntoUMLModelQueryTest >> testGetAncestorsForInto [
 	| model outputAccumulator result |
 	model := self getTestModelForGeneralizations.
@@ -133,7 +134,7 @@ OntoUMLModelQueryTest >> testGetAncestorsForInto [
 	self assert: (outputAccumulator sorted: self getClassBlockSorter) equals: result.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OntoUMLModelQueryTest >> testGetAssociationsFrom [
 	| model result |
 	model := self getTestModelForAssociations.
@@ -141,7 +142,7 @@ OntoUMLModelQueryTest >> testGetAssociationsFrom [
 	self assert: (OntoUMLModelQuery getAssociationsFrom: model) equals: result.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OntoUMLModelQueryTest >> testGetAssociationsFromFilterBy [
 	| model result |
 	model := self getTestModelForAssociations.
@@ -149,7 +150,7 @@ OntoUMLModelQueryTest >> testGetAssociationsFromFilterBy [
 	self assert: (OntoUMLModelQuery getAssociationsFrom: model filterBy: [ :association | association oclIsKindOf: 'Mediation' ]) equals: result.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OntoUMLModelQueryTest >> testGetAssociationsFromWithStereotype [
 	| model result |
 	model := self getTestModelForAssociations.
@@ -157,7 +158,7 @@ OntoUMLModelQueryTest >> testGetAssociationsFromWithStereotype [
 	self assert: (OntoUMLModelQuery getAssociationsFrom: model withStereotype: OntoUMLMediation) equals: result.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OntoUMLModelQueryTest >> testGetAssociationsFromWithStereotypeFilterBy [
 	| model result |
 	model := self getTestModelForAssociations.
@@ -166,7 +167,7 @@ OntoUMLModelQueryTest >> testGetAssociationsFromWithStereotypeFilterBy [
 	self assert: (OntoUMLModelQuery getAssociationsFrom: model withStereotype: OntoUMLMediation filterBy: [ :association | association memberEnds second type name = 'kind']) equals: result.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OntoUMLModelQueryTest >> testGetChildrenOfFrom [
 	| model result  |
 	model := self getTestModelForGeneralizations.
@@ -177,7 +178,7 @@ OntoUMLModelQueryTest >> testGetChildrenOfFrom [
 		sorted: self getClassBlockSorter) asOrderedCollection equals: result asOrderedCollection.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OntoUMLModelQueryTest >> testGetDescendantsForFrom [
 	| model result |
 	model := self getTestModelForGeneralizations.
@@ -187,7 +188,7 @@ OntoUMLModelQueryTest >> testGetDescendantsForFrom [
 	self assert: ((OntoUMLModelQuery getDescendantsFor: model second from: model) sorted: self getClassBlockSorter) equals: result.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OntoUMLModelQueryTest >> testGetDescendantsForFromInto [
 	| model result outputAccumulator |
 	model := self getTestModelForGeneralizations.
@@ -199,7 +200,7 @@ OntoUMLModelQueryTest >> testGetDescendantsForFromInto [
 	self assert: (outputAccumulator sorted: self getClassBlockSorter) equals: result.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OntoUMLModelQueryTest >> testGetEntitiesFrom [
 	| model result | 
 	model := self getTestModelForEntities.
@@ -207,7 +208,7 @@ OntoUMLModelQueryTest >> testGetEntitiesFrom [
 	self assert: (OntoUMLModelQuery getEntitiesFrom: model) equals: result. 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OntoUMLModelQueryTest >> testGetEntitiesFromFilterBy [
 	| model result | 
 	model := self getTestModelForEntities.
@@ -216,7 +217,7 @@ OntoUMLModelQueryTest >> testGetEntitiesFromFilterBy [
 	self assert: (OntoUMLModelQuery getEntitiesFrom: model withStereotype: OntoUMLKind) equals: result. 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OntoUMLModelQueryTest >> testGetEntitiesFromWithStereotype [
 	| model result | 
 	model := self getTestModelForEntities.
@@ -225,7 +226,7 @@ OntoUMLModelQueryTest >> testGetEntitiesFromWithStereotype [
 	self assert: (OntoUMLModelQuery getEntitiesFrom: model withStereotype: OntoUMLKind) equals: result. 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OntoUMLModelQueryTest >> testGetEntitiesFromWithStereotypeFilterBy [
 	| model result | 
 	model := self getTestModelForEntities.
@@ -236,7 +237,7 @@ OntoUMLModelQueryTest >> testGetEntitiesFromWithStereotypeFilterBy [
 			filterBy: [ :entity | entity name = 'elementSubKindA' ]) equals: result. 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OntoUMLModelQueryTest >> testGetGeneralizationsFrom [
 	| model result  |
 	model := self getTestModelForGeneralizations.
@@ -244,7 +245,7 @@ OntoUMLModelQueryTest >> testGetGeneralizationsFrom [
 	self assert: (OntoUMLModelQuery getGeneralizationsFrom: model) equals: result asSet.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OntoUMLModelQueryTest >> testGetGeneralizationsFromFilterBy [
 	| model result  |
 	model := self getTestModelForGeneralizations.
@@ -254,7 +255,7 @@ OntoUMLModelQueryTest >> testGetGeneralizationsFromFilterBy [
 		[ :generalization | generalization specific = model first]) equals: result asSet.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OntoUMLModelQueryTest >> testGetParentsOf [
 	| model result  |
 	model := self getTestModelForGeneralizations.
@@ -265,7 +266,7 @@ OntoUMLModelQueryTest >> testGetParentsOf [
 		sorted: self getClassBlockSorter) equals: result asOrderedCollection.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OntoUMLModelQueryTest >> testGetSourceEndFrom [
 	| association result |
 	association := self getTestAssociation.
@@ -273,7 +274,7 @@ OntoUMLModelQueryTest >> testGetSourceEndFrom [
 	self assert: (OntoUMLModelQuery getSourceEndFrom: association ) equals: result.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OntoUMLModelQueryTest >> testGetSourceFrom [
 	| association result |
 	association := self getTestAssociation.
@@ -281,7 +282,7 @@ OntoUMLModelQueryTest >> testGetSourceFrom [
 	self assert: (OntoUMLModelQuery getSourceFrom: association ) equals: result.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OntoUMLModelQueryTest >> testGetTargetEndFrom [
 	| association result |
 	association := self getTestAssociation.
@@ -289,7 +290,7 @@ OntoUMLModelQueryTest >> testGetTargetEndFrom [
 	self assert: (OntoUMLModelQuery getTargetEndFrom: association ) equals: result.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OntoUMLModelQueryTest >> testGetTargetFrom [
 	| association result |
 	association := self getTestAssociation.
@@ -297,7 +298,7 @@ OntoUMLModelQueryTest >> testGetTargetFrom [
 	self assert: (OntoUMLModelQuery getTargetFrom: association ) equals: result.
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OntoUMLModelQueryTest >> testIsOclKindOf [
 	| stereotypeKind noStereotype stereotypeMixin |
 	stereotypeKind := OntoUMLKind new.
@@ -310,7 +311,7 @@ OntoUMLModelQueryTest >> testIsOclKindOf [
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 OntoUMLModelQueryTest >> testIsStereotypeOfOclKindOf [
 	| elementKind elementStereotypeLess elementMixin |
 	elementKind := self createClass: 'kind' withStereotype: OntoUMLKind.

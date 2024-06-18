@@ -1,1 +1,1 @@
-Package { #name : #BaselineOfOntoUMLModelQuery }
+Package { #name : 'BaselineOfOntoUMLModelQuery' }

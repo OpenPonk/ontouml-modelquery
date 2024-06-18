@@ -1,10 +1,11 @@
 Class {
-	#name : #BaselineOfOntoUMLModelQuery,
-	#superclass : #BaselineOf,
-	#category : #BaselineOfOntoUMLModelQuery
+	#name : 'BaselineOfOntoUMLModelQuery',
+	#superclass : 'BaselineOf',
+	#category : 'BaselineOfOntoUMLModelQuery',
+	#package : 'BaselineOfOntoUMLModelQuery'
 }
 
-{ #category : #baselines }
+{ #category : 'baselines' }
 BaselineOfOntoUMLModelQuery >> baseline: spec [
 	<baseline>
 	spec

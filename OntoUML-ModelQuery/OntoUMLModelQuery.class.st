@@ -1,12 +1,13 @@
 Class {
-	#name : #OntoUMLModelQuery,
-	#superclass : #Object,
+	#name : 'OntoUMLModelQuery',
+	#superclass : 'Object',
 	#traits : 'TProfileGatherer',
 	#classTraits : 'TProfileGatherer classTrait',
-	#category : #'OntoUML-ModelQuery'
+	#category : 'OntoUML-ModelQuery',
+	#package : 'OntoUML-ModelQuery'
 }
 
-{ #category : #generalizations }
+{ #category : 'generalizations' }
 OntoUMLModelQuery class >> getAncestorsFor: aChild [
 	| ancestorSet |
 	ancestorSet := Set new.
@@ -14,7 +15,7 @@ OntoUMLModelQuery class >> getAncestorsFor: aChild [
 	^ ancestorSet.
 ]
 
-{ #category : #generalizations }
+{ #category : 'generalizations' }
 OntoUMLModelQuery class >> getAncestorsFor: aTarget into: aAncestorsSet [ 
 	aTarget generalizations do: [ :generalization | 
 		(aAncestorsSet includes: generalization general) ifFalse: [ 
@@ -22,42 +23,42 @@ OntoUMLModelQuery class >> getAncestorsFor: aTarget into: aAncestorsSet [
 			self getAncestorsFor: generalization general into: aAncestorsSet. ]. ].
 ]
 
-{ #category : #associations }
+{ #category : 'associations' }
 OntoUMLModelQuery class >> getAssociationName: aAssociation [
 	^ ((aAssociation memberEnds at: 1) type name) , '->' , ((aAssociation memberEnds at: 2) type name).
 ]
 
-{ #category : #associations }
+{ #category : 'associations' }
 OntoUMLModelQuery class >> getAssociationsFrom: aModel [
 	^ (aModel select: [ :object | object isKindOf: OPUMLAssociation. ]).
 ]
 
-{ #category : #associations }
+{ #category : 'associations' }
 OntoUMLModelQuery class >> getAssociationsFrom: aModel filterBy: aBlockFilter [
 	^ (self getAssociationsFrom: aModel) select:
 			[ :association | aBlockFilter value: association ].
 ]
 
-{ #category : #associations }
+{ #category : 'associations' }
 OntoUMLModelQuery class >> getAssociationsFrom: aModel withStereotype: aStereotypeClass [
 	^ (aModel select: [ :object | object isKindOf: OPUMLAssociation. ])
 		select: [ :association | (self getStereotypeClass: association) = aStereotypeClass ].
 ]
 
-{ #category : #associations }
+{ #category : 'associations' }
 OntoUMLModelQuery class >> getAssociationsFrom: aModel withStereotype: aStereotypeClass filterBy: aBlockFilter [
 	^ (self getAssociationsFrom: aModel withStereotype: aStereotypeClass) 
 		select: [ :association | aBlockFilter value: association ].
 ]
 
-{ #category : #generalizations }
+{ #category : 'generalizations' }
 OntoUMLModelQuery class >> getChildrenOf: aParent from: aModel [
 	^ (self getGeneralizationsFrom: aModel filterBy: 
 			[ :generalization | generalization general = aParent ])
 				collect: [ :generalization | generalization specific. ].
 ]
 
-{ #category : #generalizations }
+{ #category : 'generalizations' }
 OntoUMLModelQuery class >> getDescendantsFor: aAncestor from: aModel [
 	| childrenSet |
 	childrenSet := Set new.
@@ -65,7 +66,7 @@ OntoUMLModelQuery class >> getDescendantsFor: aAncestor from: aModel [
 	^ childrenSet
 ]
 
-{ #category : #generalizations }
+{ #category : 'generalizations' }
 OntoUMLModelQuery class >> getDescendantsFor: aTarget from: aModel into: aChildrenSet [
 	((aModel select: [ :object | object isKindOf: OPUMLGeneralization ])
 		select: [ :generalization | generalization general = aTarget ])
@@ -78,39 +79,39 @@ OntoUMLModelQuery class >> getDescendantsFor: aTarget from: aModel into: aChildr
 						into: aChildrenSet ] ].
 ]
 
-{ #category : #entities }
+{ #category : 'entities' }
 OntoUMLModelQuery class >> getEntitiesFrom: aModel [
 	^ aModel select: [ :object | object isKindOf: OPUMLClass. ].
 ]
 
-{ #category : #entities }
+{ #category : 'entities' }
 OntoUMLModelQuery class >> getEntitiesFrom: aModel filterBy: aBlockFilter [
 	^ (self getEntitiesFrom: aModel) select: [ :element | aBlockFilter value: element. ].
 ]
 
-{ #category : #entities }
+{ #category : 'entities' }
 OntoUMLModelQuery class >> getEntitiesFrom: aModel withStereotype: aStereotypeClass [
 	^ (aModel select: [ :object | object isKindOf: OPUMLClass. ])
 		select: [ :entity | (self getStereotypeClass: entity) = aStereotypeClass ].
 ]
 
-{ #category : #entities }
+{ #category : 'entities' }
 OntoUMLModelQuery class >> getEntitiesFrom: aModel withStereotype: aStereotypeClass filterBy: aBlockFilter [
 	^ (self getEntitiesFrom: aModel withStereotype: aStereotypeClass) 
 		select: [ :entity | aBlockFilter value: entity ].
 ]
 
-{ #category : #generalizations }
+{ #category : 'generalizations' }
 OntoUMLModelQuery class >> getGeneralizationSetsFrom: aModel [
 	^ (aModel select: [ :object | object isKindOf: OPUMLGeneralizationSet. ]) asSet.
 ]
 
-{ #category : #generalizations }
+{ #category : 'generalizations' }
 OntoUMLModelQuery class >> getGeneralizationsFrom: aModel [
 	^ ((self getEntitiesFrom: aModel) flatCollect: [ :object | object generalizations ]) asSet.
 ]
 
-{ #category : #generalizations }
+{ #category : 'generalizations' }
 OntoUMLModelQuery class >> getGeneralizationsFrom: aModel filterBy: aBlockFilter [
 	^ (self getGeneralizationsFrom: aModel) select: 
 			[ :generalization | aBlockFilter value: generalization ].
@@ -118,46 +119,46 @@ OntoUMLModelQuery class >> getGeneralizationsFrom: aModel filterBy: aBlockFilter
 
 ]
 
-{ #category : #generalizations }
+{ #category : 'generalizations' }
 OntoUMLModelQuery class >> getGeneralizationsWithoutGenSetsFrom: aModel [
 	| generalizations |
 	generalizations := (self getEntitiesFrom: aModel) flatCollect: [ :object | object generalizations ].
 	^ (generalizations select: [ :generalization | generalization generalizationSets isEmpty. ]) asSet.
 ]
 
-{ #category : #generalizations }
+{ #category : 'generalizations' }
 OntoUMLModelQuery class >> getParentsOf: aChild [
 	^ aChild generalizations collect: [ :generalization | generalization general. ].
 ]
 
-{ #category : #associations }
+{ #category : 'associations' }
 OntoUMLModelQuery class >> getSourceEndFrom: aAssociation [
 	^ aAssociation memberEnds first.
 ]
 
-{ #category : #associations }
+{ #category : 'associations' }
 OntoUMLModelQuery class >> getSourceFrom: aAssociation [
 	^ (self getSourceEndFrom: aAssociation) type.
 ]
 
-{ #category : #associations }
+{ #category : 'associations' }
 OntoUMLModelQuery class >> getTargetEndFrom: aAssociation [
 	^ aAssociation memberEnds second.
 ]
 
-{ #category : #associations }
+{ #category : 'associations' }
 OntoUMLModelQuery class >> getTargetFrom: aAssociation [
 	^ (self getTargetEndFrom: aAssociation) type.
 ]
 
-{ #category : #'accessing - stereotypes' }
+{ #category : 'accessing - stereotypes' }
 OntoUMLModelQuery class >> is: aStereotype oclKindOf: aStereotypeName [
 	aStereotype ifNil: [ ^false. ].
 	"else"
 	^  aStereotype oclIsKindOf: aStereotypeName. 
 ]
 
-{ #category : #'accessing - stereotypes' }
+{ #category : 'accessing - stereotypes' }
 OntoUMLModelQuery class >> isStereotypeOf: aObject oclKindOf: aStereotypeName [
 	| stereotype |
 	stereotype := (self getStereotype: aObject).
