@@ -1,10 +1,11 @@
 Class {
-	#name : #BaselineOfOntoUMLModelQuery,
-	#superclass : #BaselineOf,
-	#category : #BaselineOfOntoUMLModelQuery
+	#name : 'BaselineOfOntoUMLModelQuery',
+	#superclass : 'BaselineOf',
+	#category : 'BaselineOfOntoUMLModelQuery',
+	#package : 'BaselineOfOntoUMLModelQuery'
 }
 
-{ #category : #baselines }
+{ #category : 'baselines' }
 BaselineOfOntoUMLModelQuery >> baseline: spec [
 	<baseline>
 	spec
@@ -13,7 +14,7 @@ BaselineOfOntoUMLModelQuery >> baseline: spec [
 				baseline: 'OntoUMLProfile-Plugin'
 				with: [ spec
 						className: 'BaselineOfOntoUMLProfile';
-						repository: 'github://openponk/ontouml-profile:v3.0.x';
+						repository: 'github://openponk/ontouml-profile:v4.0.x';
 						loads: 'plugin' ].
 			spec
 				project: 'OntoUMLProfile'
