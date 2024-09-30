@@ -1,1 +1,1 @@
-Package { #name : #'OntoUML-ModelQuery' }
+Package { #name : 'OntoUML-ModelQuery' }
