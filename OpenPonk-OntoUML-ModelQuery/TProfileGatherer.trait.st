@@ -1,7 +1,7 @@
 Trait {
 	#name : 'TProfileGatherer',
-	#category : 'OntoUML-ModelQuery',
-	#package : 'OntoUML-ModelQuery'
+	#category : 'OpenPonk-OntoUML-ModelQuery',
+	#package : 'OpenPonk-OntoUML-ModelQuery'
 }
 
 { #category : 'utilities' }

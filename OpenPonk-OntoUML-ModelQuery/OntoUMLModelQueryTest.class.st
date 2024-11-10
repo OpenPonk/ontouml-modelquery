@@ -1,8 +1,8 @@
 Class {
 	#name : 'OntoUMLModelQueryTest',
 	#superclass : 'TestCase',
-	#category : 'OntoUML-ModelQuery',
-	#package : 'OntoUML-ModelQuery'
+	#category : 'OpenPonk-OntoUML-ModelQuery',
+	#package : 'OpenPonk-OntoUML-ModelQuery'
 }
 
 { #category : 'tests - utility' }

@@ -3,8 +3,8 @@ Class {
 	#superclass : 'Object',
 	#traits : 'TProfileGatherer',
 	#classTraits : 'TProfileGatherer classTrait',
-	#category : 'OntoUML-ModelQuery',
-	#package : 'OntoUML-ModelQuery'
+	#category : 'OpenPonk-OntoUML-ModelQuery',
+	#package : 'OpenPonk-OntoUML-ModelQuery'
 }
 
 { #category : 'generalizations' }
