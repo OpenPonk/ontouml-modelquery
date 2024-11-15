@@ -4,17 +4,17 @@ SmalltalkCISpec {
 			#platforms : [
 				#pharo
 			],
-			#baseline : 'OntoUMLModelQuery'
+			#baseline : 'OpenPonkOntoUMLModelQuery'
 		}
 	],
 	#testing : {
+		#packages : [
+			'OpenPonk*'
+		],
 		#coverage : {
 			#packages : [
-				'OntoUML-ModelQuery*'
+				'OpenPonk-OntoUML-ModelQuery*'
 			]
-		},
-		#packages : [
-			'OntoUML-ModelQuery*'
-		]
+		}
 	}
 }
