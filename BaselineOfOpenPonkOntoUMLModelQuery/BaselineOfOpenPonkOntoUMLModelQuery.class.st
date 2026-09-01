@@ -1,3 +1,6 @@
+"
+Metacello baseline for the OpenPonk OntoUML Model Query package, defining its package dependencies and load configurations.
+"
 Class {
 	#name : 'BaselineOfOpenPonkOntoUMLModelQuery',
 	#superclass : 'BaselineOf',

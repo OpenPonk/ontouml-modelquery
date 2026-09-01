@@ -1,3 +1,6 @@
+"
+I am a unit test class verifying the structural query capabilities of OntoUMLModelQuery. I validate the correct extraction of entities, associations, generalization sets, and taxonomic hierarchies based on stereotype filters.
+"
 Class {
 	#name : 'OntoUMLModelQueryTest',
 	#superclass : 'TestCase',
