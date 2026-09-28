@@ -1,5 +1,1 @@
-{
-	"include" : [
-		{ "repository" : "OpenPonk/ontouml-verifications", "build-dependent" : true }
-	]
-}
+{	"include" : [		{ "repository" : "OpenPonk/ontouml-verifications", "branch" : "master", "build-dependent" : true },		{ "repository" : "OpenPonk/openponk-ontouml-to-uml-transformation", "branch" : "master", "build-dependent" : true }	]}
