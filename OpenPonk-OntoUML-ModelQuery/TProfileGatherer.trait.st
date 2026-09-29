@@ -1,3 +1,6 @@
+"
+I am a utility trait that resolves and retrieves UML elements, associations, and specific OntoUML stereotypes from a model or profile. I provide the foundational lookup logic required for complex model queries.
+"
 Trait {
 	#name : 'TProfileGatherer',
 	#category : 'OpenPonk-OntoUML-ModelQuery',

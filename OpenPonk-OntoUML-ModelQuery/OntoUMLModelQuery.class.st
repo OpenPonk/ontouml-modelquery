@@ -1,3 +1,6 @@
+"
+I am a utility class providing a robust, class-side API for querying OpenPonk OntoUML models. I execute structural queries to extract specific entities, traverse generalization trees (ancestors and descendants), resolve association endpoints, and filter elements based on applied stereotypes.
+"
 Class {
 	#name : 'OntoUMLModelQuery',
 	#superclass : 'Object',
