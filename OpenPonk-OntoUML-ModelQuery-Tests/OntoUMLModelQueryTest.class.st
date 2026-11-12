@@ -4,8 +4,8 @@ I am a unit test class verifying the structural query capabilities of OntoUMLMod
 Class {
 	#name : 'OntoUMLModelQueryTest',
 	#superclass : 'TestCase',
-	#category : 'OpenPonk-OntoUML-ModelQuery',
-	#package : 'OpenPonk-OntoUML-ModelQuery'
+	#category : 'OpenPonk-OntoUML-ModelQuery-Tests',
+	#package : 'OpenPonk-OntoUML-ModelQuery-Tests'
 }
 
 { #category : 'tests - utility' }

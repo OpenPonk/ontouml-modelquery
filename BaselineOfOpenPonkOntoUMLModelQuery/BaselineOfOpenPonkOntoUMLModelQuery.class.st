@@ -24,8 +24,9 @@ BaselineOfOpenPonkOntoUMLModelQuery >> baseline: spec [
 				copyFrom: 'OpenPonk-OntoUML-Profile'
 				with: [ spec loads: 'default' ].
 			spec package: 'OpenPonk-OntoUML-ModelQuery'.
+			spec package: 'OpenPonk-OntoUML-ModelQuery-Tests' with: [ spec requires: #('OpenPonk-OntoUML-ModelQuery') ].
 			spec
 				group: 'plugin'
-				with: #('OpenPonk-OntoUML-Profile' 'OpenPonk-OntoUML-ModelQuery').
-			spec group: 'default' with: #(OpenPonkOntoUMLProfile 'OpenPonk-OntoUML-ModelQuery') ]
+				with: #('OpenPonk-OntoUML-Profile' 'OpenPonk-OntoUML-ModelQuery' 'OpenPonk-OntoUML-ModelQuery-Tests').
+			spec group: 'default' with: #(OpenPonkOntoUMLProfile 'OpenPonk-OntoUML-ModelQuery' 'OpenPonk-OntoUML-ModelQuery-Tests') ]
 ]
