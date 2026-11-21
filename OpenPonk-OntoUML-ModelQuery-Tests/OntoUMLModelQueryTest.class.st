@@ -65,6 +65,7 @@ OntoUMLModelQueryTest >> getTestAssociation [
 
 { #category : 'tests - constants' }
 OntoUMLModelQueryTest >> getTestModelForAssociations [
+
 	| kind subkind quality role mediationToKind mediationToSubKind characterization generalization |
 	kind := self createClass: 'kind' withStereotype: OntoUMLKind.
 	subkind := self createClass: 'subkind' withStereotype: OntoUMLSubKind.
@@ -73,11 +74,19 @@ OntoUMLModelQueryTest >> getTestModelForAssociations [
 	characterization := self createAssociationFrom: kind to: quality.
 	characterization applyStereotype: OntoUMLCharacterization new.
 	mediationToKind := self createAssociationFrom: kind to: role.
-	mediationToKind applyStereotype: OntoUMLCharacterization new.
+	mediationToKind applyStereotype: OntoUMLMediation new.
 	mediationToSubKind := self createAssociationFrom: subkind to: role.
-	mediationToSubKind applyStereotype: OntoUMLCharacterization new.
+	mediationToSubKind applyStereotype: OntoUMLMediation new.
 	generalization := self createGeneralizationFor: kind withSpecific: subkind.
-	^ { kind. subkind. quality. role. mediationToKind. mediationToSubKind. characterization. generalization. }.
+	^ {
+		  kind.
+		  subkind.
+		  quality.
+		  role.
+		  mediationToKind.
+		  mediationToSubKind.
+		  characterization.
+		  generalization }
 ]
 
 { #category : 'tests - constants' }
@@ -138,6 +147,24 @@ OntoUMLModelQueryTest >> testGetAncestorsForInto [
 ]
 
 { #category : 'tests' }
+OntoUMLModelQueryTest >> testGetAssociationName [
+
+	| namedSource namedTarget unnamedSource unnamedTarget |
+	self assert: (OntoUMLModelQuery getAssociationName: self getTestAssociation) equals: 'kind->quality'.
+	namedSource := self createClass: 'Source' withStereotype: OntoUMLKind.
+	namedTarget := self createClass: 'Target' withStereotype: OntoUMLQuality.
+	unnamedSource := OPUMLClass new.
+	unnamedTarget := OPUMLClass new.
+	self assert: (OntoUMLModelQuery getAssociationName: (self createAssociationFrom: unnamedSource to: unnamedTarget)) equals: '->'.
+	self
+		assert: (OntoUMLModelQuery getAssociationName: (self createAssociationFrom: namedSource to: unnamedTarget))
+		equals: 'Source->'.
+	self
+		assert: (OntoUMLModelQuery getAssociationName: (self createAssociationFrom: unnamedSource to: namedTarget))
+		equals: '->Target'
+]
+
+{ #category : 'tests' }
 OntoUMLModelQueryTest >> testGetAssociationsFrom [
 	| model result |
 	model := self getTestModelForAssociations.
@@ -147,27 +174,38 @@ OntoUMLModelQueryTest >> testGetAssociationsFrom [
 
 { #category : 'tests' }
 OntoUMLModelQueryTest >> testGetAssociationsFromFilterBy [
+
 	| model result |
 	model := self getTestModelForAssociations.
-	result := (model select: [ :object | object isKindOf: OPUMLAssociation. ]) select: [ :association | association oclIsKindOf: 'Mediation' ].
-	self assert: (OntoUMLModelQuery getAssociationsFrom: model filterBy: [ :association | association oclIsKindOf: 'Mediation' ]) equals: result.
+	result := OntoUMLModelQuery
+		          getAssociationsFrom: model
+		          filterBy: [ :association | OntoUMLModelQuery isStereotypeOf: association oclKindOf: 'Mediation' ].
+	self assertCollection: result hasSameElements: {
+			(model at: 5).
+			(model at: 6) }
 ]
 
 { #category : 'tests' }
 OntoUMLModelQueryTest >> testGetAssociationsFromWithStereotype [
+
 	| model result |
 	model := self getTestModelForAssociations.
-	result := (model select: [ :object | object isKindOf: OPUMLAssociation. ]) select: [ :association | association oclIsKindOf: 'Mediation' ].
-	self assert: (OntoUMLModelQuery getAssociationsFrom: model withStereotype: OntoUMLMediation) equals: result.
+	result := OntoUMLModelQuery getAssociationsFrom: model withStereotype: OntoUMLMediation.
+	self assertCollection: result hasSameElements: {
+			(model at: 5).
+			(model at: 6) }
 ]
 
 { #category : 'tests' }
 OntoUMLModelQueryTest >> testGetAssociationsFromWithStereotypeFilterBy [
+
 	| model result |
 	model := self getTestModelForAssociations.
-	result := (model select: [ :object | object isKindOf: OPUMLAssociation. ])
-		select: [ :association | (association oclIsKindOf: 'Mediation') and: (association memberEnds second type name = 'kind')].
-	self assert: (OntoUMLModelQuery getAssociationsFrom: model withStereotype: OntoUMLMediation filterBy: [ :association | association memberEnds second type name = 'kind']) equals: result.
+	result := OntoUMLModelQuery
+		          getAssociationsFrom: model
+		          withStereotype: OntoUMLMediation
+		          filterBy: [ :association | (OntoUMLModelQuery getSourceFrom: association) name = 'kind' ].
+	self assertCollection: result hasSameElements: { (model at: 5) }
 ]
 
 { #category : 'tests' }
@@ -204,6 +242,39 @@ OntoUMLModelQueryTest >> testGetDescendantsForFromInto [
 ]
 
 { #category : 'tests' }
+OntoUMLModelQueryTest >> testGetDescendantsForFromPackagedElements [
+
+	| package rootKind childSubKindA childSubKindB grandChildRole unrelatedKind result accumulator |
+	rootKind := self createClass: 'RootKind' withStereotype: OntoUMLKind.
+	childSubKindA := self createClass: 'ChildSubKindA' withStereotype: OntoUMLSubKind.
+	childSubKindB := self createClass: 'ChildSubKindB' withStereotype: OntoUMLSubKind.
+	grandChildRole := self createClass: 'GrandChildRole' withStereotype: OntoUMLRole.
+	unrelatedKind := self createClass: 'UnrelatedKind' withStereotype: OntoUMLKind.
+	self createGeneralizationFor: rootKind withSpecific: childSubKindA.
+	self createGeneralizationFor: childSubKindA withSpecific: childSubKindB.
+	self createGeneralizationFor: childSubKindB withSpecific: childSubKindA.
+	self createGeneralizationFor: childSubKindA withSpecific: grandChildRole.
+	package := OPUMLPackage new.
+	package packagedElements addAll: {
+			rootKind.
+			childSubKindA.
+			childSubKindB.
+			grandChildRole.
+			unrelatedKind }.
+	result := OntoUMLModelQuery getDescendantsFor: rootKind from: package packagedElements.
+	self assertCollection: result hasSameElements: {
+			childSubKindA.
+			childSubKindB.
+			grandChildRole }.
+	accumulator := Set new.
+	OntoUMLModelQuery getDescendantsFor: rootKind from: package packagedElements into: accumulator.
+	self assertCollection: accumulator hasSameElements: {
+			childSubKindA.
+			childSubKindB.
+			grandChildRole }
+]
+
+{ #category : 'tests' }
 OntoUMLModelQueryTest >> testGetEntitiesFrom [
 	| model result | 
 	model := self getTestModelForEntities.
@@ -213,11 +284,11 @@ OntoUMLModelQueryTest >> testGetEntitiesFrom [
 
 { #category : 'tests' }
 OntoUMLModelQueryTest >> testGetEntitiesFromFilterBy [
-	| model result | 
+
+	| model result |
 	model := self getTestModelForEntities.
-	result := (model select: [ :object | (object isKindOf: OPUMLClass) ])
-			select: [ :element | element name = 'elementKind' ].
-	self assert: (OntoUMLModelQuery getEntitiesFrom: model withStereotype: OntoUMLKind) equals: result. 
+	result := OntoUMLModelQuery getEntitiesFrom: model filterBy: [ :element | element name = 'elementKind' ].
+	self assertCollection: result hasSameElements: { model first }
 ]
 
 { #category : 'tests' }
@@ -241,6 +312,42 @@ OntoUMLModelQueryTest >> testGetEntitiesFromWithStereotypeFilterBy [
 ]
 
 { #category : 'tests' }
+OntoUMLModelQueryTest >> testGetGeneralizationSetsFrom [
+
+	| parent childA childB genA genB genSetA genSetB association model |
+	parent := self createClass: 'Parent' withStereotype: OntoUMLKind.
+	childA := self createClass: 'ChildA' withStereotype: OntoUMLSubKind.
+	childB := self createClass: 'ChildB' withStereotype: OntoUMLSubKind.
+	genA := self createGeneralizationFor: parent withSpecific: childA.
+	genB := self createGeneralizationFor: parent withSpecific: childB.
+	genSetA := OPUMLGeneralizationSet new
+		           name: 'SetA';
+		           yourself.
+	genSetA generalizations add: genA.
+	genSetB := OPUMLGeneralizationSet new
+		           name: 'SetB';
+		           yourself.
+	genSetB generalizations add: genB.
+	association := self createAssociationFrom: parent to: childA.
+	model := {
+		         parent.
+		         childA.
+		         childB.
+		         genA.
+		         genB.
+		         genSetA.
+		         genSetB.
+		         association }.
+	self assertCollection: (OntoUMLModelQuery getGeneralizationSetsFrom: model) hasSameElements: {
+			genSetA.
+			genSetB }.
+	self assertEmpty: (OntoUMLModelQuery getGeneralizationSetsFrom: {
+				 parent.
+				 childA.
+				 association })
+]
+
+{ #category : 'tests' }
 OntoUMLModelQueryTest >> testGetGeneralizationsFrom [
 	| model result  |
 	model := self getTestModelForGeneralizations.
@@ -256,6 +363,30 @@ OntoUMLModelQueryTest >> testGetGeneralizationsFromFilterBy [
 		select: [ :generalization | generalization specific = model first].
 	self assert: (OntoUMLModelQuery getGeneralizationsFrom: model filterBy:
 		[ :generalization | generalization specific = model first]) equals: result asSet.
+]
+
+{ #category : 'tests' }
+OntoUMLModelQueryTest >> testGetGeneralizationsWithoutGenSetsFrom [
+
+	| parent childA childB childC genInSetA genInSetB genWithoutSet generalizationSet model |
+	parent := self createClass: 'Parent' withStereotype: OntoUMLKind.
+	childA := self createClass: 'ChildA' withStereotype: OntoUMLSubKind.
+	childB := self createClass: 'ChildB' withStereotype: OntoUMLSubKind.
+	childC := self createClass: 'ChildC' withStereotype: OntoUMLSubKind.
+	genInSetA := self createGeneralizationFor: parent withSpecific: childA.
+	genInSetB := self createGeneralizationFor: parent withSpecific: childB.
+	genWithoutSet := self createGeneralizationFor: parent withSpecific: childC.
+	generalizationSet := OPUMLGeneralizationSet new.
+	generalizationSet generalizations addAll: {
+			genInSetA.
+			genInSetB }.
+	model := {
+		         parent.
+		         childA.
+		         childB.
+		         childC.
+		         generalizationSet }.
+	self assertCollection: (OntoUMLModelQuery getGeneralizationsWithoutGenSetsFrom: model) hasSameElements: { genWithoutSet }
 ]
 
 { #category : 'tests' }
@@ -286,6 +417,39 @@ OntoUMLModelQueryTest >> testGetSourceFrom [
 ]
 
 { #category : 'tests' }
+OntoUMLModelQueryTest >> testGetStereotype [
+
+	| elementWithStereotype kindStereotype plainElement nonOntoUmlOnlyElement mixedElement roleStereotype |
+	elementWithStereotype := OPUMLClass new.
+	kindStereotype := OntoUMLKind new.
+	elementWithStereotype applyStereotype: kindStereotype.
+	plainElement := OPUMLClass new.
+	nonOntoUmlOnlyElement := OPUMLClass new.
+	nonOntoUmlOnlyElement appliedStereotypes add: OPUMLStereotype new.
+	mixedElement := OPUMLClass new.
+	mixedElement appliedStereotypes add: OPUMLStereotype new.
+	roleStereotype := OntoUMLRole new.
+	mixedElement applyStereotype: roleStereotype.
+	self assert: (OntoUMLModelQuery getStereotype: elementWithStereotype) identicalTo: kindStereotype.
+	self assert: (OntoUMLModelQuery getStereotype: plainElement) equals: nil.
+	self assert: (OntoUMLModelQuery getStereotype: nonOntoUmlOnlyElement) equals: nil.
+	self assert: (OntoUMLModelQuery getStereotype: mixedElement) identicalTo: roleStereotype
+]
+
+{ #category : 'tests' }
+OntoUMLModelQueryTest >> testGetStereotypeClass [
+
+	| elementWithStereotype plainElement nonOntoUmlOnlyElement |
+	elementWithStereotype := self createClass: 'KindClass' withStereotype: OntoUMLKind.
+	plainElement := OPUMLClass new.
+	nonOntoUmlOnlyElement := OPUMLClass new.
+	nonOntoUmlOnlyElement appliedStereotypes add: OPUMLStereotype new.
+	self assert: (OntoUMLModelQuery getStereotypeClass: elementWithStereotype) identicalTo: OntoUMLKind.
+	self assert: (OntoUMLModelQuery getStereotypeClass: plainElement) equals: nil.
+	self assert: (OntoUMLModelQuery getStereotypeClass: nonOntoUmlOnlyElement) equals: nil
+]
+
+{ #category : 'tests' }
 OntoUMLModelQueryTest >> testGetTargetEndFrom [
 	| association result |
 	association := self getTestAssociation.
@@ -303,26 +467,33 @@ OntoUMLModelQueryTest >> testGetTargetFrom [
 
 { #category : 'tests' }
 OntoUMLModelQueryTest >> testIsOclKindOf [
-	| stereotypeKind noStereotype stereotypeMixin |
-	stereotypeKind := OntoUMLKind new.
-	noStereotype := nil.
-	stereotypeMixin := OntoUMLMixin new.
-	self assert: (OntoUMLModelQuery is: stereotypeKind oclKindOf: 'Sortal') equals: true.
-	self assert: (OntoUMLModelQuery is: stereotypeKind oclKindOf: 'Kind') equals: true.
-	self assert: (OntoUMLModelQuery is: noStereotype oclKindOf: 'Sortal') equals: false.
-	self assert: (OntoUMLModelQuery is: stereotypeMixin oclKindOf: 'Sortal') equals: false.
 
+	| stereotypeKind stereotypeMixin |
+	stereotypeKind := OntoUMLKind new.
+	stereotypeMixin := OntoUMLMixin new.
+	self assert: (OntoUMLModelQuery is: stereotypeKind oclKindOf: 'Sortal') description: 'Kind stereotype must be an OCL Sortal'.
+	self assert: (OntoUMLModelQuery is: stereotypeKind oclKindOf: 'Kind') description: 'Kind stereotype must be an OCL Kind'.
+	self deny: (OntoUMLModelQuery is: nil oclKindOf: 'Sortal') description: 'Nil stereotype must not satisfy OCL kind check'.
+	self deny: (OntoUMLModelQuery is: stereotypeMixin oclKindOf: 'Sortal') description: 'Mixin stereotype must not be an OCL Sortal'
 ]
 
 { #category : 'tests' }
 OntoUMLModelQueryTest >> testIsStereotypeOfOclKindOf [
+
 	| elementKind elementStereotypeLess elementMixin |
 	elementKind := self createClass: 'kind' withStereotype: OntoUMLKind.
 	elementStereotypeLess := OPUMLClass new.
 	elementMixin := self createClass: 'mixin' withStereotype: OntoUMLMixin.
-	self assert: (OntoUMLModelQuery isStereotypeOf: elementKind oclKindOf: 'Sortal') equals: true.
-	self assert: (OntoUMLModelQuery isStereotypeOf: elementKind oclKindOf: 'Kind') equals: true.
-	self assert: (OntoUMLModelQuery isStereotypeOf: elementStereotypeLess oclKindOf: 'Sortal') equals: false.
-	self assert: (OntoUMLModelQuery isStereotypeOf: elementMixin oclKindOf: 'Sortal') equals: false.
-
+	self
+		assert: (OntoUMLModelQuery isStereotypeOf: elementKind oclKindOf: 'Sortal')
+		description: 'Kind class must have a Sortal stereotype'.
+	self
+		assert: (OntoUMLModelQuery isStereotypeOf: elementKind oclKindOf: 'Kind')
+		description: 'Kind class must have a Kind stereotype'.
+	self
+		deny: (OntoUMLModelQuery isStereotypeOf: elementStereotypeLess oclKindOf: 'Sortal')
+		description: 'Class without stereotype must not satisfy OCL kind check'.
+	self
+		deny: (OntoUMLModelQuery isStereotypeOf: elementMixin oclKindOf: 'Sortal')
+		description: 'Mixin class must not have a Sortal stereotype'
 ]

@@ -28,7 +28,11 @@ OntoUMLModelQuery class >> getAncestorsFor: aTarget into: aAncestorsSet [
 
 { #category : 'associations' }
 OntoUMLModelQuery class >> getAssociationName: aAssociation [
-	^ ((aAssociation memberEnds at: 1) type name) , '->' , ((aAssociation memberEnds at: 2) type name).
+
+	^ String streamContents: [ :stream |
+			  stream nextPutAll: ((self getSourceFrom: aAssociation) name ifNil: [ '' ]).
+			  stream nextPutAll: '->'.
+			  stream nextPutAll: ((self getTargetFrom: aAssociation) name ifNil: [ '' ]) ]
 ]
 
 { #category : 'associations' }
@@ -71,15 +75,11 @@ OntoUMLModelQuery class >> getDescendantsFor: aAncestor from: aModel [
 
 { #category : 'generalizations' }
 OntoUMLModelQuery class >> getDescendantsFor: aTarget from: aModel into: aChildrenSet [
-	((aModel select: [ :object | object isKindOf: OPUMLGeneralization ])
-		select: [ :generalization | generalization general = aTarget ])
-		do: [ :generalization | 
-			(aChildrenSet includes: generalization specific)
-				ifFalse: [ aChildrenSet add: generalization specific.
-					self
-						getDescendantsFor: generalization specific
-						from: aModel
-						into: aChildrenSet ] ].
+
+	(self getChildrenOf: aTarget from: aModel) do: [ :child |
+			(aChildrenSet includes: child) ifFalse: [
+					aChildrenSet add: child.
+					self getDescendantsFor: child from: aModel into: aChildrenSet ] ]
 ]
 
 { #category : 'entities' }
