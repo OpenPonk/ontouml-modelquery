@@ -30,9 +30,9 @@ OntoUMLModelQuery class >> getAncestorsFor: aTarget into: aAncestorsSet [
 OntoUMLModelQuery class >> getAssociationName: aAssociation [
 
 	^ String streamContents: [ :stream |
-			  stream nextPutAll: ((self getSourceFrom: aAssociation) name ifNil: [ '' ]).
+			  (self getSourceFrom: aAssociation) name ifNotNil: [ :sourceName | stream nextPutAll: sourceName ].
 			  stream nextPutAll: '->'.
-			  stream nextPutAll: ((self getTargetFrom: aAssociation) name ifNil: [ '' ]) ]
+			  (self getTargetFrom: aAssociation) name ifNotNil: [ :targetName | stream nextPutAll: targetName ] ]
 ]
 
 { #category : 'associations' }
